@@ -27,7 +27,6 @@ public class HotelEntity {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
 	@Column(unique = true)
-	private String hotelCode;
 	private String name;
 	private String city;
 	private int stars;
