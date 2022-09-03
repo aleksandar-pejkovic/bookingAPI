@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserSevice {
 				return new UserDto();
 			}
 			UserEntity storedUser = userRepository.findByUsername(user.getUsername());
-			BeanUtils.copyProperties(user, storedUser);
+			BeanUtils.copyProperties(user, storedUser, "id");
 
 			UserEntity updatedUser = userRepository.save(storedUser);
 			UserDto returnValue = new UserDto();
@@ -100,7 +100,9 @@ public class UserServiceImpl implements UserSevice {
 		try {
 			UserEntity storedUser = userRepository.findByUsername(username);
 			UserDto returnValue = new UserDto();
-			BeanUtils.copyProperties(storedUser, returnValue);
+
+			if (storedUser != null)
+				BeanUtils.copyProperties(storedUser, returnValue);
 
 			return returnValue;
 		} catch (EntityExistsException | NullPointerException e) {
@@ -108,13 +110,15 @@ public class UserServiceImpl implements UserSevice {
 			return new UserDto();
 		}
 	}
-	
+
 	@Override
 	public UserDto loadUserByEmail(String email) {
 		try {
 			UserEntity storedUser = userRepository.findByEmail(email);
 			UserDto returnValue = new UserDto();
-			BeanUtils.copyProperties(storedUser, returnValue);
+
+			if (storedUser != null)
+				BeanUtils.copyProperties(storedUser, returnValue);
 
 			return returnValue;
 		} catch (EntityExistsException | NullPointerException e) {
@@ -122,13 +126,15 @@ public class UserServiceImpl implements UserSevice {
 			return new UserDto();
 		}
 	}
-	
+
 	@Override
 	public UserDto loadUserByPhone(String phone) {
 		try {
 			UserEntity storedUser = userRepository.findByPhone(phone);
 			UserDto returnValue = new UserDto();
-			BeanUtils.copyProperties(storedUser, returnValue);
+
+			if (storedUser != null)
+				BeanUtils.copyProperties(storedUser, returnValue);
 
 			return returnValue;
 		} catch (EntityExistsException | NullPointerException e) {

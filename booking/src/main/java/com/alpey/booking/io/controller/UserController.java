@@ -52,7 +52,7 @@ public class UserController {
 		return returnValue;
 	}
 
-	@DeleteMapping
+	@DeleteMapping("/{username}")
 	public UserResponse deleteUser(@PathVariable String username) {
 		UserDto deletedUser = userService.deleteUser(username);
 
