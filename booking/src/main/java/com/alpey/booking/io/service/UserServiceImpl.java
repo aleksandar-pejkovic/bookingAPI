@@ -1,5 +1,8 @@
 package com.alpey.booking.io.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.persistence.EntityExistsException;
 
 import org.springframework.beans.BeanUtils;
@@ -7,12 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alpey.booking.io.repository.UserRepository;
-import com.alpey.booking.io.serviceImpl.UserSeviceImpl;
+import com.alpey.booking.io.serviceImpl.UserSevice;
 import com.alpey.booking.model.dto.UserDto;
 import com.alpey.booking.model.entity.UserEntity;
 
 @Service
-public class UserService implements UserSeviceImpl {
+public class UserServiceImpl implements UserSevice {
 
 	@Autowired
 	UserRepository userRepository;
@@ -70,7 +73,7 @@ public class UserService implements UserSeviceImpl {
 			UserEntity storedUser = userRepository.findByUsername(username);
 			UserDto returnValue = new UserDto();
 			BeanUtils.copyProperties(storedUser, returnValue);
-			
+
 			userRepository.delete(storedUser);
 			System.out.println();
 			return returnValue;
@@ -81,12 +84,53 @@ public class UserService implements UserSeviceImpl {
 	}
 
 	@Override
-	public UserDto readUser(String username) {
+	public List<UserDto> loadAllUsers() {
+		List<UserDto> returnValue = new ArrayList<>();
+		List<UserEntity> users = (List<UserEntity>) userRepository.findAll();
+
+		for (UserEntity user : users) {
+			UserDto userDto = new UserDto();
+			BeanUtils.copyProperties(user, userDto);
+			returnValue.add(userDto);
+		}
+		return returnValue;
+	}
+
+	@Override
+	public UserDto loadUserByUsername(String username) {
 		try {
 			UserEntity storedUser = userRepository.findByUsername(username);
 			UserDto returnValue = new UserDto();
 			BeanUtils.copyProperties(storedUser, returnValue);
-			
+
+			return returnValue;
+		} catch (EntityExistsException | NullPointerException e) {
+			e.printStackTrace();
+			return new UserDto();
+		}
+	}
+	
+	@Override
+	public UserDto loadUserByEmail(String email) {
+		try {
+			UserEntity storedUser = userRepository.findByEmail(email);
+			UserDto returnValue = new UserDto();
+			BeanUtils.copyProperties(storedUser, returnValue);
+
+			return returnValue;
+		} catch (EntityExistsException | NullPointerException e) {
+			e.printStackTrace();
+			return new UserDto();
+		}
+	}
+	
+	@Override
+	public UserDto loadUserByPhone(String phone) {
+		try {
+			UserEntity storedUser = userRepository.findByPhone(phone);
+			UserDto returnValue = new UserDto();
+			BeanUtils.copyProperties(storedUser, returnValue);
+
 			return returnValue;
 		} catch (EntityExistsException | NullPointerException e) {
 			e.printStackTrace();

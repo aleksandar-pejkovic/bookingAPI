@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.alpey.booking.io.service.UserService;
+import com.alpey.booking.io.service.UserServiceImpl;
 import com.alpey.booking.model.dto.UserDto;
 import com.alpey.booking.model.request.UserRequest;
 import com.alpey.booking.model.response.UserResponse;
@@ -17,7 +17,7 @@ import com.alpey.booking.model.response.UserResponse;
 public class UserController {
 
 	@Autowired
-	UserService userService;
+	UserServiceImpl userService;
 
 	@PostMapping
 	public UserResponse createUser(@RequestBody UserRequest userRequest) {
@@ -25,7 +25,7 @@ public class UserController {
 		BeanUtils.copyProperties(userRequest, newUser);
 
 		UserDto storedUser = userService.createUser(newUser);
-		
+
 		UserResponse returnValue = new UserResponse();
 		BeanUtils.copyProperties(storedUser, returnValue);
 
