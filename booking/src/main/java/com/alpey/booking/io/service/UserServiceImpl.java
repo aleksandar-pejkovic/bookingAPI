@@ -48,13 +48,12 @@ public class UserServiceImpl implements UserSevice {
 			if (!exists(user.getUsername())) {
 				return new UserDto();
 			}
+			UserEntity storedUser = userRepository.findByUsername(user.getUsername());
+			BeanUtils.copyProperties(user, storedUser);
 
-			UserEntity updatedUser = new UserEntity();
-			BeanUtils.copyProperties(user, updatedUser);
-
-			UserEntity storedUser = userRepository.save(updatedUser);
+			UserEntity updatedUser = userRepository.save(storedUser);
 			UserDto returnValue = new UserDto();
-			BeanUtils.copyProperties(storedUser, returnValue);
+			BeanUtils.copyProperties(updatedUser, returnValue);
 
 			return returnValue;
 		} catch (EntityExistsException | NullPointerException e) {
