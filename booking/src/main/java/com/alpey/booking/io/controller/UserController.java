@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.alpey.booking.io.service.UserServiceImpl;
+import com.alpey.booking.io.serviceImpl.UserServiceImpl;
 import com.alpey.booking.model.dto.UserDto;
 import com.alpey.booking.model.request.UserRequest;
 import com.alpey.booking.model.response.UserResponse;

@@ -9,14 +9,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class UserDto {
-
-	private String username;
-	private String email;
-	private String password;
-	private String firstName;
-	private String lastName;
+public class HotelDto {
+	
+	private String name;
 	private String city;
-	private String phone;
+	private int stars;
 
 }

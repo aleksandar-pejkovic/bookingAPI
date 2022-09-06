@@ -1,16 +1,17 @@
-package com.alpey.booking.io.service;
+package com.alpey.booking.io.serviceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alpey.booking.io.repository.UserRepository;
-import com.alpey.booking.io.serviceImpl.UserSevice;
+import com.alpey.booking.io.service.UserSevice;
 import com.alpey.booking.model.dto.UserDto;
 import com.alpey.booking.model.entity.UserEntity;
 
@@ -27,14 +28,9 @@ public class UserServiceImpl implements UserSevice {
 			if (exists(user)) {
 				return new UserDto();
 			}
-
-			UserEntity newUser = new UserEntity();
-			BeanUtils.copyProperties(user, newUser);
-
+			UserEntity newUser = copyDtoToUserEntity(user);
 			UserEntity storedUser = userRepository.save(newUser);
-			UserDto returnValue = new UserDto();
-			BeanUtils.copyProperties(storedUser, returnValue);
-
+			UserDto returnValue = copyUserEntityToDto(storedUser);
 			return returnValue;
 		} catch (EntityExistsException | NullPointerException e) {
 			e.printStackTrace();
@@ -44,19 +40,16 @@ public class UserServiceImpl implements UserSevice {
 
 	@Override
 	public UserDto updateUser(UserDto user) {
+		String username = user.getUsername();
 		try {
-			if (!exists(user.getUsername())) {
+			if (!exists(username)) {
 				return new UserDto();
 			}
-			UserEntity storedUser = userRepository.findByUsername(user.getUsername());
-			BeanUtils.copyProperties(user, storedUser, "id");
-
+			UserEntity storedUser = copyDtoToUserEntity(user, username);
 			UserEntity updatedUser = userRepository.save(storedUser);
-			UserDto returnValue = new UserDto();
-			BeanUtils.copyProperties(updatedUser, returnValue);
-
+			UserDto returnValue = copyUserEntityToDto(updatedUser);
 			return returnValue;
-		} catch (EntityExistsException | NullPointerException e) {
+		} catch (EntityNotFoundException | NullPointerException e) {
 			e.printStackTrace();
 			return new UserDto();
 		}
@@ -70,13 +63,12 @@ public class UserServiceImpl implements UserSevice {
 			}
 
 			UserEntity storedUser = userRepository.findByUsername(username);
-			UserDto returnValue = new UserDto();
-			BeanUtils.copyProperties(storedUser, returnValue);
+			UserDto returnValue = copyUserEntityToDto(storedUser);
 
 			userRepository.delete(storedUser);
-			System.out.println();
+			System.out.println("User " + storedUser.getUsername() + " deleted!");
 			return returnValue;
-		} catch (EntityExistsException | NullPointerException e) {
+		} catch (EntityNotFoundException | NullPointerException e) {
 			e.printStackTrace();
 			return new UserDto();
 		}
@@ -88,8 +80,7 @@ public class UserServiceImpl implements UserSevice {
 		List<UserEntity> users = (List<UserEntity>) userRepository.findAll();
 
 		for (UserEntity user : users) {
-			UserDto userDto = new UserDto();
-			BeanUtils.copyProperties(user, userDto);
+			UserDto userDto = copyUserEntityToDto(user);
 			returnValue.add(userDto);
 		}
 		return returnValue;
@@ -179,6 +170,24 @@ public class UserServiceImpl implements UserSevice {
 
 			return true;
 		}
+	}
+
+	private UserDto copyUserEntityToDto(UserEntity entity) {
+		UserDto dto = new UserDto();
+		BeanUtils.copyProperties(entity, dto);
+		return dto;
+	}
+
+	private UserEntity copyDtoToUserEntity(UserDto dto) {
+		UserEntity entity = new UserEntity();
+		BeanUtils.copyProperties(dto, entity);
+		return entity;
+	}
+
+	private UserEntity copyDtoToUserEntity(UserDto dto, String username) {
+		UserEntity entity = userRepository.findByUsername(username);
+		BeanUtils.copyProperties(dto, entity);
+		return entity;
 	}
 
 }

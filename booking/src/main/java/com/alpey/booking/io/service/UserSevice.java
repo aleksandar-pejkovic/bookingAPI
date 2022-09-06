@@ -1,4 +1,4 @@
-package com.alpey.booking.io.serviceImpl;
+package com.alpey.booking.io.service;
 
 import java.util.List;
 
