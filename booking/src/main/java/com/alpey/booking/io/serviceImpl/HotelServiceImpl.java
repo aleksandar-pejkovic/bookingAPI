@@ -8,12 +8,14 @@ import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.alpey.booking.io.repository.HotelRepository;
 import com.alpey.booking.io.service.HotelService;
 import com.alpey.booking.model.dto.HotelDto;
 import com.alpey.booking.model.entity.HotelEntity;
 
+@Service
 public class HotelServiceImpl implements HotelService {
 
 	@Autowired

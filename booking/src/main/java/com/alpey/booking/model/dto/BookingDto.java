@@ -1,4 +1,4 @@
-package com.alpey.booking.model.response;
+package com.alpey.booking.model.dto;
 
 import java.time.LocalDate;
 
@@ -13,9 +13,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class BookingResponse {
+public class BookingDto {
 
 	private String bookingId;
+	private String username;
 	private String firstName;
 	private String lastName;
 	private String email;
