@@ -17,5 +17,7 @@ public interface BookingService {
 	List<BookingDto> loadBookingsByUser(String username);
 	
 	List<BookingDto> loadBookingsByHotel(String name);
+	
+	BookingDto loadBookingByBookingId(String bookingId);
 
 }

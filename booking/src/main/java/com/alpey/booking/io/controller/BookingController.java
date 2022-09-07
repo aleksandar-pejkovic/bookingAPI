@@ -79,7 +79,7 @@ public class BookingController {
 		}
 		return returnValue;
 	}
-	
+
 	@GetMapping("/hotel/{hotelName}")
 	public List<BookingResponse> getByHotel(@PathVariable String hotelName) {
 		List<BookingResponse> returnValue = new ArrayList<>();
@@ -91,6 +91,14 @@ public class BookingController {
 			returnValue.add(response);
 		}
 		return returnValue;
+	}
+
+	@GetMapping("/id/{bookingId}")
+	public BookingResponse getByBookingId(@PathVariable String bookingId) {
+		BookingResponse response = new BookingResponse();
+		BookingDto booking = bookingService.loadBookingByBookingId(bookingId);
+		BeanUtils.copyProperties(booking, response);
+		return response;
 	}
 
 }

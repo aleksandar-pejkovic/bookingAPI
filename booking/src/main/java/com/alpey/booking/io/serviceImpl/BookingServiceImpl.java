@@ -133,6 +133,17 @@ public class BookingServiceImpl implements BookingService {
 		return returnValue;
 	}
 
+	@Override
+	public BookingDto loadBookingByBookingId(String bookingId) {
+		BookingDto returnValue = new BookingDto();
+		BookingEntity booking = bookingRepository.findByBookingId(bookingId);
+		if (booking != null) {
+			BeanUtils.copyProperties(booking, returnValue);
+			return returnValue;
+		}
+		return new BookingDto();
+	}
+
 	private boolean exists(String bookingId) {
 		BookingEntity storedBooking = bookingRepository.findByBookingId(bookingId);
 		if (storedBooking == null) {
