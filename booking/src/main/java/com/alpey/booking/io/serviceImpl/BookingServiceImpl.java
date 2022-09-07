@@ -37,10 +37,13 @@ public class BookingServiceImpl implements BookingService {
 			}
 			UserEntity user = userRepository.findByUsername(booking.getUsername());
 			HotelEntity hotel = hotelRepository.findByName(booking.getHotelName());
-			BookingEntity newBooking = copyDtoToBookingEntity(booking, user, hotel);
-			BookingEntity storedBooking = bookingRepository.save(newBooking);
-			BookingDto returnValue = copyBookingEntityToDto(user, hotel, storedBooking);
-			return returnValue;
+			if (user != null && hotel != null) {
+				BookingEntity newBooking = copyDtoToBookingEntity(booking, user, hotel);
+				BookingEntity storedBooking = bookingRepository.save(newBooking);
+				BookingDto returnValue = copyBookingEntityToDto(user, hotel, storedBooking);
+				return returnValue;
+			}
+			return new BookingDto();
 		} catch (EntityExistsException | NullPointerException e) {
 			e.printStackTrace();
 			return new BookingDto();
@@ -55,10 +58,13 @@ public class BookingServiceImpl implements BookingService {
 			}
 			UserEntity user = userRepository.findByUsername(booking.getUsername());
 			HotelEntity hotel = hotelRepository.findByName(booking.getHotelName());
-			BookingEntity updatedBooking = copyDtoToBookingEntity(booking, user, hotel, booking.getBookingId());
-			BookingEntity storedBooking = bookingRepository.save(updatedBooking);
-			BookingDto returnValue = copyBookingEntityToDto(user, hotel, storedBooking);
-			return returnValue;
+			if (user != null && hotel != null) {
+				BookingEntity updatedBooking = copyDtoToBookingEntity(booking, user, hotel, booking.getBookingId());
+				BookingEntity storedBooking = bookingRepository.save(updatedBooking);
+				BookingDto returnValue = copyBookingEntityToDto(user, hotel, storedBooking);
+				return returnValue;
+			}
+			return new BookingDto();
 		} catch (EntityNotFoundException | NullPointerException e) {
 			e.printStackTrace();
 			return new BookingDto();
