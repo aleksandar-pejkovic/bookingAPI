@@ -1,7 +1,9 @@
 package com.alpey.booking.io.serviceImpl;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
@@ -35,6 +37,10 @@ public class BookingServiceImpl implements BookingService {
 			if (exists(booking.getBookingId())) {
 				return new BookingDto();
 			}
+			if (!datesAreAvailable(booking)) {
+				System.out.println("Selected dates are unavailable!");
+				return new BookingDto();
+			}
 			UserEntity user = userRepository.findByUsername(booking.getUsername());
 			HotelEntity hotel = hotelRepository.findByName(booking.getHotelName());
 			if (user != null && hotel != null) {
@@ -54,6 +60,10 @@ public class BookingServiceImpl implements BookingService {
 	public BookingDto updateBooking(BookingDto booking) {
 		try {
 			if (!exists(booking.getBookingId())) {
+				return new BookingDto();
+			}
+			if (!datesAreAvailable(booking)) {
+				System.out.println("Selected dates are unavailable!");
 				return new BookingDto();
 			}
 			UserEntity user = userRepository.findByUsername(booking.getUsername());
@@ -179,6 +189,29 @@ public class BookingServiceImpl implements BookingService {
 		booking.setUser(user);
 		booking.setHotel(hotel);
 		return booking;
+	}
+
+	private boolean datesAreAvailable(BookingDto newBooking) {
+		LocalDate newBeginDate = newBooking.getBeginDate();
+		LocalDate newEndDate = newBooking.getEndDate();
+		if (newEndDate.isBefore(newBeginDate)) {
+			System.out.println("End date must be after begin date!");
+			return false;
+		}
+		List<BookingEntity> allBookings = (List<BookingEntity>) bookingRepository.findAll();
+		List<BookingEntity> bookings = allBookings.stream()
+				.filter(e -> e.getHotel().getName().equals(newBooking.getHotelName())).collect(Collectors.toList());
+		for (BookingEntity booking : bookings) {
+			LocalDate beginDate = booking.getBeginDate();
+			LocalDate endDate = booking.getEndDate();
+
+			if ((newBeginDate.isAfter(beginDate) && newBeginDate.isBefore(endDate))
+					|| (newEndDate.isAfter(beginDate) && newEndDate.isBefore(endDate))
+					|| (newBeginDate.isEqual(beginDate) || newEndDate.isEqual(endDate))) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 }
