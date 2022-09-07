@@ -143,7 +143,6 @@ public class HotelServiceImpl implements HotelService {
 		HotelEntity storedHotel = hotelRepository.findByName(name);
 
 		if (storedHotel == null) {
-			System.out.println("Hotel doesn't eixst!");
 			return false;
 		} else {
 			return true;
