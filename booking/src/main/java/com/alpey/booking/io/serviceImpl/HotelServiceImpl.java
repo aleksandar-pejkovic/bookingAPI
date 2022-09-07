@@ -129,7 +129,7 @@ public class HotelServiceImpl implements HotelService {
 	@Override
 	public List<HotelDto> loadAllHotels() {
 		List<HotelDto> returnValue = new ArrayList<>();
-		List<HotelEntity> hotels = new ArrayList<>();
+		List<HotelEntity> hotels = (List<HotelEntity>) hotelRepository.findAll();
 
 		for (HotelEntity hotel : hotels) {
 			HotelDto hotelDto = copyHotelEntityToDto(hotel);
