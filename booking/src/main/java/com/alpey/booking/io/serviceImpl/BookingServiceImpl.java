@@ -55,7 +55,7 @@ public class BookingServiceImpl implements BookingService {
 			}
 			UserEntity user = userRepository.findByUsername(booking.getUsername());
 			HotelEntity hotel = hotelRepository.findByName(booking.getHotelName());
-			BookingEntity updatedBooking = copyDtoToBookingEntity(booking, user, hotel);
+			BookingEntity updatedBooking = copyDtoToBookingEntity(booking, user, hotel, booking.getBookingId());
 			BookingEntity storedBooking = bookingRepository.save(updatedBooking);
 			BookingDto returnValue = copyBookingEntityToDto(user, hotel, storedBooking);
 			return returnValue;
@@ -149,6 +149,15 @@ public class BookingServiceImpl implements BookingService {
 
 	private BookingEntity copyDtoToBookingEntity(BookingDto bookingDto, UserEntity user, HotelEntity hotel) {
 		BookingEntity booking = new BookingEntity();
+		BeanUtils.copyProperties(bookingDto, booking);
+		booking.setUser(user);
+		booking.setHotel(hotel);
+		return booking;
+	}
+
+	private BookingEntity copyDtoToBookingEntity(BookingDto bookingDto, UserEntity user, HotelEntity hotel,
+			String bookingId) {
+		BookingEntity booking = bookingRepository.findByBookingId(bookingId);
 		BeanUtils.copyProperties(bookingDto, booking);
 		booking.setUser(user);
 		booking.setHotel(hotel);
