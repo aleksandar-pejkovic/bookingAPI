@@ -93,7 +93,7 @@ public class BookingController {
 		return returnValue;
 	}
 
-	@GetMapping("/id/{bookingId}")
+	@GetMapping("/{bookingId}")
 	public BookingResponse getByBookingId(@PathVariable String bookingId) {
 		BookingResponse response = new BookingResponse();
 		BookingDto booking = bookingService.loadBookingByBookingId(bookingId);
