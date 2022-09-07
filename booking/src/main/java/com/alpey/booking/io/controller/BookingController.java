@@ -40,7 +40,7 @@ public class BookingController {
 	public BookingResponse updateBooking(@RequestBody BookingRequest bookingRequest) {
 		BookingDto updatedBooking = new BookingDto();
 		BeanUtils.copyProperties(bookingRequest, updatedBooking);
-		BookingDto storedBooking = bookingService.createBooking(updatedBooking);
+		BookingDto storedBooking = bookingService.updateBooking(updatedBooking);
 		BookingResponse returnValue = new BookingResponse();
 		BeanUtils.copyProperties(storedBooking, returnValue);
 		return returnValue;
