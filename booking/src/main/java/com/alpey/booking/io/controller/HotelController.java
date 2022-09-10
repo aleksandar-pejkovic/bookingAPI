@@ -1,5 +1,6 @@
 package com.alpey.booking.io.controller;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,10 +23,10 @@ import com.alpey.booking.model.response.HotelResponse;
 @RestController
 @RequestMapping("/hotel")
 public class HotelController {
-	
+
 	@Autowired
 	HotelServiceImpl hotelService;
-	
+
 	@PostMapping
 	public HotelResponse createHotel(@RequestBody HotelRequest hotelRequest) {
 		HotelDto newHotel = new HotelDto();
@@ -75,7 +76,7 @@ public class HotelController {
 
 		return returnValue;
 	}
-	
+
 	@GetMapping("/name/{name}")
 	public HotelResponse getHotelByName(@PathVariable String name) {
 		HotelResponse returnValue = new HotelResponse();
@@ -83,7 +84,7 @@ public class HotelController {
 		BeanUtils.copyProperties(storedHotel, returnValue);
 		return returnValue;
 	}
-	
+
 	@GetMapping("/city/{city}")
 	public List<HotelResponse> getHotelByCity(@PathVariable String city) {
 		List<HotelResponse> returnValue = new ArrayList<>();
@@ -95,7 +96,7 @@ public class HotelController {
 		}
 		return returnValue;
 	}
-	
+
 	@GetMapping("/stars/{stars}")
 	public List<HotelResponse> getHotelByStars(@PathVariable int stars) {
 		List<HotelResponse> returnValue = new ArrayList<>();
@@ -106,6 +107,12 @@ public class HotelController {
 			returnValue.add(hotelResponse);
 		}
 		return returnValue;
+	}
+
+	@GetMapping("/dates/{hotelName}")
+	public List<LocalDate> getBookedDates(@PathVariable String hotelName) {
+		HotelDto hotel = hotelService.loadHotelByName(hotelName);
+		return hotelService.getBookedDates(hotel);
 	}
 
 }

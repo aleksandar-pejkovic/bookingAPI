@@ -1,5 +1,6 @@
 package com.alpey.booking.io.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import com.alpey.booking.model.dto.HotelDto;
@@ -19,5 +20,7 @@ public interface HotelService {
 	List<HotelDto> loadHotelByStars(int stars);
 	
 	List<HotelDto> loadAllHotels();
+	
+	List<LocalDate> getBookedDates(HotelDto hotel);
 
 }

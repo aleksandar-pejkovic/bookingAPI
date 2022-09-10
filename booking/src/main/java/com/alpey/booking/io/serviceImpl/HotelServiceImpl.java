@@ -1,7 +1,9 @@
 package com.alpey.booking.io.serviceImpl;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
@@ -10,9 +12,11 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.alpey.booking.io.repository.BookingRepository;
 import com.alpey.booking.io.repository.HotelRepository;
 import com.alpey.booking.io.service.HotelService;
 import com.alpey.booking.model.dto.HotelDto;
+import com.alpey.booking.model.entity.BookingEntity;
 import com.alpey.booking.model.entity.HotelEntity;
 
 @Service
@@ -20,6 +24,8 @@ public class HotelServiceImpl implements HotelService {
 
 	@Autowired
 	HotelRepository hotelRepository;
+	@Autowired
+	BookingRepository bookingRepository;
 
 	@Override
 	public HotelDto createHotel(HotelDto hotel) {
@@ -165,6 +171,34 @@ public class HotelServiceImpl implements HotelService {
 		HotelEntity entity = hotelRepository.findByName(name);
 		BeanUtils.copyProperties(dto, entity);
 		return entity;
+	}
+
+	@Override
+	public List<LocalDate> getBookedDates(HotelDto hotel) {
+		List<LocalDate> bookedDates = new ArrayList<>();
+		HotelEntity storedHotel = hotelRepository.findByName(hotel.getName());
+		if (storedHotel == null) {
+			return new ArrayList<>();
+		}
+		try {
+			List<BookingEntity> allBookings = (List<BookingEntity>) bookingRepository.findAll();
+			List<BookingEntity> bookings = allBookings.stream()
+					.filter(e -> e.getHotel().getName().equals(storedHotel.getName())).collect(Collectors.toList());
+
+			for (BookingEntity booking : bookings) {
+				LocalDate beginDate = booking.getBeginDate();
+				LocalDate endDate = booking.getEndDate();
+
+				bookedDates.addAll(beginDate.datesUntil(endDate).collect(Collectors.toList()));
+
+			}
+
+			return bookedDates;
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+			return new ArrayList<>();
+		}
+
 	}
 
 }
