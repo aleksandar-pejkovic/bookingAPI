@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alpey.booking.io.serviceImpl.UserServiceImpl;
 import com.alpey.booking.model.dto.UserDto;
+import com.alpey.booking.model.request.LoginDetails;
 import com.alpey.booking.model.request.UserRequest;
 import com.alpey.booking.model.response.UserResponse;
 
@@ -75,7 +76,7 @@ public class UserController {
 
 		return returnValue;
 	}
-	
+
 	@GetMapping("/username/{username}")
 	public UserResponse getUserByUsername(@PathVariable String username) {
 		UserResponse returnValue = new UserResponse();
@@ -83,7 +84,7 @@ public class UserController {
 		BeanUtils.copyProperties(storedUser, returnValue);
 		return returnValue;
 	}
-	
+
 	@GetMapping("/email/{email}")
 	public UserResponse getUserByEmail(@PathVariable String email) {
 		UserResponse returnValue = new UserResponse();
@@ -91,12 +92,20 @@ public class UserController {
 		BeanUtils.copyProperties(storedUser, returnValue);
 		return returnValue;
 	}
-	
+
 	@GetMapping("/phone/{phone}")
 	public UserResponse getUserByPhone(@PathVariable String phone) {
 		UserResponse returnValue = new UserResponse();
 		UserDto storedUser = userService.loadUserByPhone(phone);
 		BeanUtils.copyProperties(storedUser, returnValue);
+		return returnValue;
+	}
+
+	@GetMapping("/login")
+	public UserResponse login(@RequestBody LoginDetails loginDetails) {
+		UserDto dto = userService.loginValidation(loginDetails);
+		UserResponse returnValue = new UserResponse(); 
+		BeanUtils.copyProperties(dto, returnValue);
 		return returnValue;
 	}
 

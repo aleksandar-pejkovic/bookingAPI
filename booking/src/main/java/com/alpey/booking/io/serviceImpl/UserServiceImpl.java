@@ -14,6 +14,7 @@ import com.alpey.booking.io.repository.UserRepository;
 import com.alpey.booking.io.service.UserSevice;
 import com.alpey.booking.model.dto.UserDto;
 import com.alpey.booking.model.entity.UserEntity;
+import com.alpey.booking.model.request.LoginDetails;
 
 @Service
 public class UserServiceImpl implements UserSevice {
@@ -188,6 +189,23 @@ public class UserServiceImpl implements UserSevice {
 		UserEntity entity = userRepository.findByUsername(username);
 		BeanUtils.copyProperties(dto, entity);
 		return entity;
+	}
+
+	@Override
+	public UserDto loginValidation(LoginDetails loginDetails) {
+		try {
+			UserEntity storedUser = userRepository.findByUsername(loginDetails.getUsername());
+			if (storedUser == null)
+				return new UserDto();
+			if (storedUser.getPassword().equals(loginDetails.getPassword())) {
+				UserDto dto = copyUserEntityToDto(storedUser);
+				return dto;
+			}
+			return new UserDto();
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+			return new UserDto();
+		}
 	}
 
 }

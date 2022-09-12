@@ -3,6 +3,7 @@ package com.alpey.booking.io.service;
 import java.util.List;
 
 import com.alpey.booking.model.dto.UserDto;
+import com.alpey.booking.model.request.LoginDetails;
 
 public interface UserSevice {
 
@@ -19,5 +20,7 @@ public interface UserSevice {
 	UserDto loadUserByPhone(String phone);
 	
 	List<UserDto> loadAllUsers();
+	
+	UserDto loginValidation(LoginDetails loginDetails);
 
 }
